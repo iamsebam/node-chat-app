@@ -77,13 +77,15 @@ locationButton.addEventListener('click', function(event) {
 });
 
 function scrollToBottom () {
-        const { clientHeight,
-            scrollTop,
-            scrollHeight } = messages;
-        const newMessageHeight = messages.lastElementChild.clientHeight;
-        const lastMessageHeight = messages.lastElementChild.previousElementSibling.clientHeight;
-        if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
-            messages.scrollTop = scrollHeight;
-        }
+    const { clientHeight,
+        scrollTop,
+        scrollHeight } = messages;
+    const newMessageHeight = messages.lastElementChild.clientHeight;
+    let lastMessageHeight;
+    if (messages.lastElementChild.previousElementSibling) {
+        lastMessageHeight = messages.lastElementChild.previousElementSibling.clientHeight;
+    }
+    if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+        messages.scrollTop = scrollHeight;
     }
 }
