@@ -18,11 +18,13 @@ socket.on('disconnect', function () {
 
 socket.on('newMessage', function(message) {
     createHtml(message, template);
+    scrollToBottom();
 });
 
 socket.on('newLocationMessage', function(message) {
     const link = `<a target="_blank" href="${message.url}">My current location</a>`;
     createHtml(message, template, link);
+    scrollToBottom();
 });
 
 submitMessage = () => {
@@ -73,3 +75,15 @@ locationButton.addEventListener('click', function(event) {
         locationButton.textContent = 'Send location';
     });
 });
+
+function scrollToBottom () {
+        const { clientHeight,
+            scrollTop,
+            scrollHeight } = messages;
+        const newMessageHeight = messages.lastElementChild.clientHeight;
+        const lastMessageHeight = messages.lastElementChild.previousElementSibling.clientHeight;
+        if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+            messages.scrollTop = scrollHeight;
+        }
+    }
+}
