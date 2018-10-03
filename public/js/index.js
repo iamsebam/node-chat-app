@@ -34,7 +34,8 @@ submitMessage = () => {
 };
 
 createHtml = (message, link) => {
-    const html = `<li>${message.from}: ${!link ? message.text : link}</li>`;
+    const formattedTime = moment(message.createdAt).format('H:mm:ss')
+    const html = `<li>${formattedTime} <span class="user__name">${message.from}</span>:</br> ${!link ? message.text : link}</li>`;
     html.trim();
     return messages.insertAdjacentHTML('beforeend', html);
 };
