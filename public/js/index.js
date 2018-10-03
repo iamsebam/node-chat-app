@@ -29,10 +29,8 @@ submitMessage = () => {
         from: 'User',
         text: input.value
     }, function() {
-
+        input.value = '';
     });
-
-    input.value = '';
 };
 
 createHtml = (message, link) => {
@@ -51,12 +49,20 @@ locationButton.addEventListener('click', function(event) {
         return alert('Geolocation not supported by your browser');
     }
 
+    locationButton.toggleAttribute('disabled');
+    locationButton.textContent = 'Sending location...'
+    
     navigator.geolocation.getCurrentPosition(function(position){
         socket.emit('createLocationMessage', {
+            from: 'User',
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
         });
+        locationButton.toggleAttribute('disabled');
+        locationButton.textContent = 'Send location';
     }, function() {
         alert('Unable to fetch location');
+        locationButton.toggleAttribute('disabled');
+        locationButton.textContent = 'Send location';
     });
 });
