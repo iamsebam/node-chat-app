@@ -3,6 +3,7 @@ const input = document.querySelector('input');
 const button = document.getElementById('send-message');
 const messages = document.getElementById('messages');
 const locationButton = document.getElementById('send-location');
+const template = document.getElementById('message-template').textContent;
 
 const socket = io();
 
@@ -16,12 +17,12 @@ socket.on('disconnect', function () {
 });
 
 socket.on('newMessage', function(message) {
-    createHtml(message);
+    createHtml(message, template);
 });
 
 socket.on('newLocationMessage', function(message) {
     const link = `<a target="_blank" href="${message.url}">My current location</a>`;
-    createHtml(message, link);
+    createHtml(message, template, link);
 });
 
 submitMessage = () => {
@@ -33,11 +34,16 @@ submitMessage = () => {
     });
 };
 
-createHtml = (message, link) => {
+createHtml = (message, template, link) => {
     const formattedTime = moment(message.createdAt).format('H:mm:ss')
-    const html = `<li>${formattedTime} <span class="user__name">${message.from}</span>:</br> ${!link ? message.text : link}</li>`;
+    const html = Mustache.render(template, {
+        user: message.from,
+        link: link,
+        text: message.text,
+        time: formattedTime
+    });
     html.trim();
-    return messages.insertAdjacentHTML('beforeend', html);
+    messages.insertAdjacentHTML('beforeend', html);
 };
 
 messageForm.addEventListener('submit', function(event) {
