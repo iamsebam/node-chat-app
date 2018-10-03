@@ -3,10 +3,6 @@ const socket = io();
 socket.on('connect', function () {
     console.log('%cConnected to server', 'color:green');
 
-    socket.emit('createMessage', {
-        to: 'Barbra',
-        text: 'Yeaah bro lets spark it up!'
-    });
 });
 
 socket.on('disconnect', function () {
@@ -14,6 +10,6 @@ socket.on('disconnect', function () {
 });
 
 socket.on('newMessage', function(message) {
-    console.log('New message: ', message);
+    console.log(`New message from ${message.from}:`, message.text);
 });
 
