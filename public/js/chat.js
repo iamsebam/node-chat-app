@@ -11,15 +11,16 @@ const socket = io();
 
 socket.on('connect', function () {
     const params = getSearchParams(window.location.search);
-
-    socket.emit('join', params, function (err) {
-        if (err) {
-            alert(err);
-            window.location.href = '/';
-        } else {
-            console.log('No error');
-        }
-    });
+    if (params) {
+        socket.emit('join', params, function (err) {
+            if (err) {
+                alert(err);
+                window.location.href = '/';
+            } else {
+                console.log('No error');
+            }
+        });
+    }
 });
 
 socket.on('disconnect', function () {
@@ -46,7 +47,6 @@ socket.on('newLocationMessage', function(message) {
 
 submitMessage = () => {
     socket.emit('createMessage', {
-        from: 'User',
         text: input.value
     }, function() {
         input.value = '';
@@ -121,8 +121,13 @@ function scrollToBottom () {
 
 function getSearchParams (search) {
     const params = new URLSearchParams(search);
-    return {
-        name: params.get('name'),
-        room: params.get('room')
+    
+    if(!(params.name === '' && params.room === '')) {
+        return { 
+            name: params.get('name'),
+            room: params.get('room')
+       }
     }
+    window.location.href = '/';
+    alert('Name and room name are required!');
 }
